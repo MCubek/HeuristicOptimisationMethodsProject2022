@@ -39,7 +39,7 @@ public class Runner {
         System.out.println();
         
         for(int i = 1; i < 10; i++) 
-        	testRoute.addCustomer(customers.get(i));
+        	testRoute.addCustomerToRouteEnd(customers.get(i));
         
         System.out.println("Route demand = " + testRoute.calculateRouteDemand());
         

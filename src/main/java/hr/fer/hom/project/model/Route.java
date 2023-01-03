@@ -1,6 +1,8 @@
 package hr.fer.hom.project.model;
 
-import java.util.ArrayList;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,53 +10,56 @@ import java.util.List;
  * @author Bero
  * Created on 27.12.2022.
  */
+
+@Getter
+@Setter
 public class Route {
-	
-	private List<Customer> customers;
-	
-	public Route(List<Customer> customers) {
-		super();
-		this.customers = customers;
-	}
 
-	public Route() {
-		super();
-		this.customers = new ArrayList<>();
-	}
-	
-	public Route createReverseRoute() {
-		List<Customer> reversedCustomers = new ArrayList<>();
-		for(int i = customers.size()-1; i >= 0; i--) 
-			reversedCustomers.add(customers.get(i));
-				
-		return new Route(reversedCustomers);
-	}
-	
-	
-	public int calculateRouteDemand() {
-		return customers.stream().mapToInt(Customer::demand).sum();
-	}
-	
-	
-	public void addCustomer(Customer customer) {
-		customers.add(customer);
-	}
-	
-	public void removeCustomer(Customer customer) {
-		customers.remove(customer);
-	}
-	
-	public boolean containsCustomer(Customer customer) {
-		return customers.contains(customer);
-	}
-	
+    private List<Customer> customers;
 
-	public List<Customer> getCustomers() {
-		return customers;
-	}
+    public Route(List<Customer> customers) {
+        this.customers = customers;
+    }
 
-	public void setCustomers(List<Customer> customers) {
-		this.customers = customers;
-	}
-		
+    public Route() {
+        this.customers = new LinkedList<>();
+    }
+
+    public int calculateRouteDemand() {
+        return customers.stream().mapToInt(Customer::demand).sum();
+    }
+
+    public int getTotalRouteTime() {
+        int time = 0;
+        for (int i = 0; i < customers.size() - 1; i++) {
+            var currentCustomer = customers.get(i);
+            var nextCustomer = customers.get(i + 1);
+
+            // Wait for customer to be ready if it is not
+            if (time < currentCustomer.readyTime()) {
+                time = currentCustomer.readyTime();
+            }
+
+            time += currentCustomer.serviceTime();
+            time += currentCustomer.calculateDistanceCeil(nextCustomer);
+        }
+        return time;
+    }
+
+    public void addCustomerToIndex(Customer customer, int index) {
+        customers.add(index, customer);
+    }
+
+    public void addCustomerToRouteEnd(Customer customer) {
+        customers.add(customer);
+    }
+
+    public void removeCustomerFromIndex(int index) {
+        customers.remove(index);
+    }
+
+    public boolean containsCustomer(Customer customer) {
+        return customers.contains(customer);
+    }
+
 }

@@ -8,9 +8,13 @@ package hr.fer.hom.project.model;
 
 public record Customer(int customerNumber, int xCoord, int yCoord, int demand, int readyTime, int dueDate,
                        int serviceTime) {
-	
-	public float calculateDistance(Customer otherCustomer) {
-		return (float) Math.sqrt(Math.pow(xCoord - otherCustomer.xCoord, 2) + Math.pow(yCoord - otherCustomer.yCoord, 2));
-	}
+
+    public double calculateDistance(Customer otherCustomer) {
+        return Math.sqrt(Math.pow(1.0 * xCoord - otherCustomer.xCoord, 2) + Math.pow(1.0 * yCoord - otherCustomer.yCoord, 2));
+    }
+
+    public int calculateDistanceCeil(Customer otherCustomer) {
+        return (int) Math.ceil(calculateDistance(otherCustomer));
+    }
 
 }
