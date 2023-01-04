@@ -11,7 +11,7 @@ public record SolutionObjectiveFunction(double alpha, double beta) implements IM
 
     @Override
     public double score(Solution solution) {
-        return solution.getNumberOfVehicles() * alpha + solution.getAllRoutesTime() * beta;
+        return Math.pow(solution.getNumberOfVehicles(), alpha) + Math.pow(solution.getAllRoutesTime(), beta);
     }
 
     @Override

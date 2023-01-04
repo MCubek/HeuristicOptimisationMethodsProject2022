@@ -1,13 +1,15 @@
 package hr.fer.hom.project;
 
+import hr.fer.hom.project.algorithm.GreedyAlgorithm;
+import hr.fer.hom.project.algorithm.IAlgorithm;
+import hr.fer.hom.project.loader.InstanceLoader;
+import hr.fer.hom.project.model.Instance;
+import hr.fer.hom.project.model.Solution;
+import hr.fer.hom.project.objective.IMinimizingSolutionObjectiveFunction;
+import hr.fer.hom.project.objective.SolutionObjectiveFunction;
+
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
-
-import hr.fer.hom.project.loader.InstanceLoader;
-import hr.fer.hom.project.model.Customer;
-import hr.fer.hom.project.model.Instance;
-import hr.fer.hom.project.model.Route;
 
 /**
  * @author matejc
@@ -30,18 +32,17 @@ public class Runner {
             e.printStackTrace();
             System.exit(1);
         }
-        
-        Route testRoute = new Route();
-        List<Customer> customers = instance.customers();
-        
-        System.out.println();
-        System.out.println("Distance between\n" + customers.get(1) + "\nand\n" + customers.get(2) + "\nis " + customers.get(1).calculateDistance(customers.get(2)));
-        System.out.println();
-        
-        for(int i = 1; i < 10; i++) 
-        	testRoute.addCustomerToRouteEnd(customers.get(i));
-        
-        System.out.println("Route demand = " + testRoute.calculateRouteDemand());
-        
+
+        var allCustomers = instance.customers();
+        var vehicleInstance = instance.vehicleInstance();
+
+        IMinimizingSolutionObjectiveFunction objectiveFunction = new SolutionObjectiveFunction(3, 1);
+        IAlgorithm greedy = new GreedyAlgorithm(allCustomers, vehicleInstance, null);
+
+
+        Solution testRoute = greedy.run(null);
+
+        System.out.println(testRoute);
+        System.out.println(objectiveFunction.stats(testRoute));
     }
 }

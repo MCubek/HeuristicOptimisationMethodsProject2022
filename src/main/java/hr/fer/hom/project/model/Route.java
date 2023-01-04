@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Bero
@@ -46,6 +47,12 @@ public class Route {
         return time;
     }
 
+    public int getUsedCargo() {
+        return customers.stream()
+                .mapToInt(Customer::demand)
+                .sum();
+    }
+
     public void addCustomerToIndex(Customer customer, int index) {
         customers.add(index, customer);
     }
@@ -60,6 +67,14 @@ public class Route {
 
     public boolean containsCustomer(Customer customer) {
         return customers.contains(customer);
+    }
+
+    @Override
+    public String toString() {
+        return getCustomers().stream()
+                .map(Customer::customerNumber)
+                .map(Object::toString)
+                .collect(Collectors.joining("->", "(", ")"));
     }
 
 }
