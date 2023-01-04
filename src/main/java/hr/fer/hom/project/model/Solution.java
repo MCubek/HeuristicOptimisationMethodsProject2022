@@ -8,6 +8,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author matejc
@@ -57,5 +58,13 @@ public class Solution implements Iterable<Solution> {
     @Override
     public Iterator<Solution> iterator() {
         return neighbourhoodIterator;
+    }
+
+    @Override
+    public String toString() {
+        return "Vehicles: %d%nRoutes:%n".formatted(routes.size())
+                + routes.stream()
+                .map(Route::toString)
+                .collect(Collectors.joining("\n"));
     }
 }
