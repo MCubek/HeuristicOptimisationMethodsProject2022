@@ -40,7 +40,7 @@ public class GreedyAlgorithm implements IAlgorithm {
             Route route = new Route();
             Customer lastCustomer = depot;
             
-            route.setCapacitiy(vehicleInstance.capacity());
+            route.setCapacity(vehicleInstance.capacity());
             route.addCustomerToRouteEnd(depot);
 
             while (true) {

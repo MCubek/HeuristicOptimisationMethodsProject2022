@@ -17,12 +17,12 @@ import java.util.stream.Collectors;
 public class Route {
 
     private List<Customer> customers;
-    private int capacitiy = 0;
+    private int capacity = 0;
 
-    public Route(List<Customer> customers, int capacitiy) {
+    public Route(List<Customer> customers, int capacity) {
 		super();
 		this.customers = customers;
-		this.capacitiy = capacitiy;
+		this.capacity = capacity;
 	}
 
 	public Route(List<Customer> customers) {
@@ -48,7 +48,8 @@ public class Route {
             }
 
             time += currentCustomer.serviceTime();
-            if(i+1 != customers.size()) time += currentCustomer.calculateDistanceCeil(customers.get(i + 1));
+            if(i+1 != customers.size())
+                time += currentCustomer.calculateDistanceCeil(customers.get(i + 1));
         }
         return time;
     }
@@ -79,12 +80,12 @@ public class Route {
 		return customers;
 	}
 
-	public int getCapacitiy() {
-		return capacitiy;
+	public int getCapacity() {
+		return capacity;
 	}
 
-	public void setCapacitiy(int capacitiy) {
-		this.capacitiy = capacitiy;
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
 	}
 
 	@Override
