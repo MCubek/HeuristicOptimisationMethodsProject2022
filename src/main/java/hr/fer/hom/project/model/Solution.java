@@ -20,21 +20,40 @@ import java.util.stream.Collectors;
 public class Solution implements Iterable<Solution> {
     private final ISolutionNeighbourhoodIterator neighbourhoodIterator;
     private List<Route> routes;
+    private List<Customer> allCustomers;
 
-    public Solution(List<Route> routes, ISolutionNeighbourhoodIterator neighbourhoodIterator) {
+    public Solution(List<Route> routes, ISolutionNeighbourhoodIterator neighbourhoodIterator, List<Customer> allCustomers) {
+		this.neighbourhoodIterator = neighbourhoodIterator;
+		this.routes = routes;
+		this.allCustomers = allCustomers;
+	}
+
+	public Solution(List<Route> routes, ISolutionNeighbourhoodIterator neighbourhoodIterator) {
         this.routes = routes;
         this.neighbourhoodIterator = neighbourhoodIterator;
     }
 
-    public Solution(ISolutionNeighbourhoodIterator neighbourhoodIterator) {
-        this(new ArrayList<>(), neighbourhoodIterator);
+    public Solution(ISolutionNeighbourhoodIterator neighbourhoodIterator, List<Customer> allCustomers) {
+        this(new ArrayList<>(), neighbourhoodIterator, allCustomers);
     }
 
-    public int getNumberOfVehicles() {
+	public List<Customer> getAllCustomers() {
+		return allCustomers;
+	}
+
+	public void setAllCustomers(List<Customer> allCustomers) {
+		this.allCustomers = allCustomers;
+	}
+
+	public List<Route> getRoutes() {
+		return routes;
+	}
+
+	public int getNumberOfVehicles() {
         return getRoutes().size();
     }
 
-    public int getAllRoutesTime() {
+	public int getAllRoutesTime() {
         return getRoutes().stream()
                 .mapToInt(Route::getTotalRouteTime)
                 .sum();

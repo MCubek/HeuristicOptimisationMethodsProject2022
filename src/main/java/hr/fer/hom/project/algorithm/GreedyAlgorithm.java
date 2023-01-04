@@ -39,6 +39,8 @@ public class GreedyAlgorithm implements IAlgorithm {
         while (!leftCustomers.isEmpty()) {
             Route route = new Route();
             Customer lastCustomer = depot;
+            
+            route.setCapacitiy(vehicleInstance.capacity());
             route.addCustomerToRouteEnd(depot);
 
             while (true) {
@@ -61,7 +63,7 @@ public class GreedyAlgorithm implements IAlgorithm {
             routes.add(route);
         }
 
-        return new Solution(routes, neighbourhoodIterator);
+        return new Solution(routes, neighbourhoodIterator, allCustomers);
     }
 
     private boolean customerIsOpen(Customer nextCustomer, Customer lastCustomer, Route route) {
@@ -78,14 +80,15 @@ public class GreedyAlgorithm implements IAlgorithm {
         int totalRouteTime = route.getTotalRouteTime();
 
         totalRouteTime += lastCustomer.calculateDistanceCeil(nextCustomer);
+        int nextCustomerArrivalTime = totalRouteTime;
 
         if (totalRouteTime < nextCustomer.readyTime()) {
             totalRouteTime = nextCustomer.readyTime();
         }
-
+        
         totalRouteTime += nextCustomer.serviceTime();
         totalRouteTime += nextCustomer.calculateDistanceCeil(depot);
 
-        return totalRouteTime <= depot.dueDate();
+        return totalRouteTime <= depot.dueDate() && nextCustomerArrivalTime <= nextCustomer.dueDate();
     }
 }

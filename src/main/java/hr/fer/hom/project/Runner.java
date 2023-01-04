@@ -2,6 +2,7 @@ package hr.fer.hom.project;
 
 import hr.fer.hom.project.algorithm.GreedyAlgorithm;
 import hr.fer.hom.project.algorithm.IAlgorithm;
+import hr.fer.hom.project.constraints.SolutionConstraintFactory;
 import hr.fer.hom.project.loader.InstanceLoader;
 import hr.fer.hom.project.model.Instance;
 import hr.fer.hom.project.model.Solution;
@@ -44,5 +45,12 @@ public class Runner {
 
         System.out.println(testRoute);
         System.out.println(objectiveFunction.stats(testRoute));
+        
+        // Checking all constrains
+        System.out.println("All constrains " + SolutionConstraintFactory.allConstrains.checkConstraint(testRoute));
+        System.out.println("eachCustomerForOneRoutes " + SolutionConstraintFactory.eachCustomerForOneRoute.checkConstraint(testRoute));
+        System.out.println("amountsMatchDemands " + SolutionConstraintFactory.amountsMatchDemands.checkConstraint(testRoute));
+        System.out.println("arrivalInterval " + SolutionConstraintFactory.arrivalInterval.checkConstraint(testRoute));
+        System.out.println("depotStartAndEnd " + SolutionConstraintFactory.depotStartAndEnd.checkConstraint(testRoute));
     }
 }

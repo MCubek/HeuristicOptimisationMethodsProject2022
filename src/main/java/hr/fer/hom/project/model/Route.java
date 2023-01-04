@@ -17,8 +17,15 @@ import java.util.stream.Collectors;
 public class Route {
 
     private List<Customer> customers;
+    private int capacitiy = 0;
 
-    public Route(List<Customer> customers) {
+    public Route(List<Customer> customers, int capacitiy) {
+		super();
+		this.customers = customers;
+		this.capacitiy = capacitiy;
+	}
+
+	public Route(List<Customer> customers) {
         this.customers = customers;
     }
 
@@ -32,9 +39,8 @@ public class Route {
 
     public int getTotalRouteTime() {
         int time = 0;
-        for (int i = 0; i < customers.size() - 1; i++) {
+        for (int i = 0; i < customers.size(); i++) {
             var currentCustomer = customers.get(i);
-            var nextCustomer = customers.get(i + 1);
 
             // Wait for customer to be ready if it is not
             if (time < currentCustomer.readyTime()) {
@@ -42,7 +48,7 @@ public class Route {
             }
 
             time += currentCustomer.serviceTime();
-            time += currentCustomer.calculateDistanceCeil(nextCustomer);
+            if(i+1 != customers.size()) time += currentCustomer.calculateDistanceCeil(customers.get(i + 1));
         }
         return time;
     }
@@ -69,7 +75,19 @@ public class Route {
         return customers.contains(customer);
     }
 
-    @Override
+    public List<Customer> getCustomers() {
+		return customers;
+	}
+
+	public int getCapacitiy() {
+		return capacitiy;
+	}
+
+	public void setCapacitiy(int capacitiy) {
+		this.capacitiy = capacitiy;
+	}
+
+	@Override
     public String toString() {
         return getCustomers().stream()
                 .map(Customer::customerNumber)
