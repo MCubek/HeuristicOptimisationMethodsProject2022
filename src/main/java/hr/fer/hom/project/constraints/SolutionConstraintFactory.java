@@ -52,7 +52,6 @@ public class SolutionConstraintFactory {
 
         for (Route route : solution.getRoutes()) {
             int time = 0;
-            List<Integer> timeList = new ArrayList<>();
 
             List<Customer> customers = route.getCustomers();
 
@@ -66,7 +65,6 @@ public class SolutionConstraintFactory {
 
                 time += currentCustomer.serviceTime();
                 if (i != customers.size() - 1) time += currentCustomer.calculateDistanceCeil(customers.get(i + 1));
-                timeList.add(time);
             }
         }
 
