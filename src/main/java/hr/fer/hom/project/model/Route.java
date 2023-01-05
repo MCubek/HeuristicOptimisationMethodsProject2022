@@ -1,7 +1,6 @@
 package hr.fer.hom.project.model;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,24 +12,20 @@ import java.util.stream.Collectors;
  */
 
 @Getter
-@Setter
 public class Route {
 
-    private List<Customer> customers;
-    private int capacity = 0;
+    private final List<Customer> customers;
+    private final int capacity;
 
     public Route(List<Customer> customers, int capacity) {
-		super();
-		this.customers = customers;
-		this.capacity = capacity;
-	}
-
-	public Route(List<Customer> customers) {
+        super();
         this.customers = customers;
+        this.capacity = capacity;
     }
 
-    public Route() {
+    public Route(int capacity) {
         this.customers = new LinkedList<>();
+        this.capacity = capacity;
     }
 
     public int calculateRouteDemand() {
@@ -48,7 +43,7 @@ public class Route {
             }
 
             time += currentCustomer.serviceTime();
-            if(i+1 != customers.size())
+            if (i + 1 != customers.size())
                 time += currentCustomer.calculateDistanceCeil(customers.get(i + 1));
         }
         return time;
@@ -76,19 +71,11 @@ public class Route {
         return customers.contains(customer);
     }
 
-    public List<Customer> getCustomers() {
-		return customers;
-	}
+    public Route copy() {
+        return new Route(new LinkedList<>(getCustomers()), getCapacity());
+    }
 
-	public int getCapacity() {
-		return capacity;
-	}
-
-	public void setCapacity(int capacity) {
-		this.capacity = capacity;
-	}
-
-	@Override
+    @Override
     public String toString() {
         return getCustomers().stream()
                 .map(Customer::customerNumber)

@@ -37,10 +37,9 @@ public class GreedyAlgorithm implements IAlgorithm {
         Customer depot = leftCustomers.removeFirst();
 
         while (!leftCustomers.isEmpty()) {
-            Route route = new Route();
+            Route route = new Route(vehicleInstance.capacity());
             Customer lastCustomer = depot;
-            
-            route.setCapacity(vehicleInstance.capacity());
+
             route.addCustomerToRouteEnd(depot);
 
             while (true) {
@@ -85,7 +84,7 @@ public class GreedyAlgorithm implements IAlgorithm {
         if (totalRouteTime < nextCustomer.readyTime()) {
             totalRouteTime = nextCustomer.readyTime();
         }
-        
+
         totalRouteTime += nextCustomer.serviceTime();
         totalRouteTime += nextCustomer.calculateDistanceCeil(depot);
 
