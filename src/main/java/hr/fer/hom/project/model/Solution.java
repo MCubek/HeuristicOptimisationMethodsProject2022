@@ -81,9 +81,14 @@ public class Solution implements Iterable<Solution> {
 
     @Override
     public String toString() {
-        return "Vehicles: %d%nRoutes:%n".formatted(routes.size())
-                + routes.stream()
-                .map(Route::toString)
-                .collect(Collectors.joining("\n"));
+    	StringBuilder sb = new StringBuilder();
+    	sb.append("%d%n".formatted(routes.size()));
+    	int i = 1;
+    	
+    	for(Route route : routes) sb.append(i++ + ": " + route + "\n");
+    	
+    	sb.append(("%.2f%n".formatted(routes.stream().mapToDouble(Route::getTotalRouteDistance).sum())).replace(".", ","));
+    	
+        return sb.toString();
     }
 }
