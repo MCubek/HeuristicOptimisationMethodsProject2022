@@ -1,9 +1,9 @@
 package hr.fer.hom.project.model;
 
-import lombok.Getter;
-
 import java.util.LinkedList;
 import java.util.List;
+
+import lombok.Getter;
 
 /**
  * @author Bero
@@ -80,8 +80,17 @@ public class Route {
     public Route copy() {
         return new Route(new LinkedList<>(getCustomers()), getCapacity());
     }
+    
 
-    @Override
+    public List<Customer> getCustomers() {
+		return customers;
+	}
+
+	public int getCapacity() {
+		return capacity;
+	}
+
+	@Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
 

@@ -20,8 +20,18 @@ public class Solution implements Iterable<Solution> {
     private final ISolutionNeighbourhoodIterator neighbourhoodIterator;
     private List<Route> routes;
     private List<Customer> allCustomers;
+    private int maximumNumberOfVehicles;
 
-    public Solution(List<Route> routes, ISolutionNeighbourhoodIterator neighbourhoodIterator, List<Customer> allCustomers) {
+	public Solution(List<Route> routes, ISolutionNeighbourhoodIterator neighbourhoodIterator,
+			List<Customer> allCustomers, int maximumNumberOfVehicles) {
+		super();
+		this.neighbourhoodIterator = neighbourhoodIterator;
+		this.routes = routes;
+		this.allCustomers = allCustomers;
+		this.maximumNumberOfVehicles = maximumNumberOfVehicles;
+	}
+
+	public Solution(List<Route> routes, ISolutionNeighbourhoodIterator neighbourhoodIterator, List<Customer> allCustomers) {
         this.neighbourhoodIterator = neighbourhoodIterator;
         this.routes = routes;
         this.allCustomers = allCustomers;
@@ -36,7 +46,15 @@ public class Solution implements Iterable<Solution> {
         this(new ArrayList<>(), neighbourhoodIterator, allCustomers);
     }
 
-    public List<Customer> getAllCustomers() {
+	public int getMaximumNumberOfVehicles() {
+		return maximumNumberOfVehicles;
+	}
+
+	public void setMaximumNumberOfVehicles(int maximumNumberOfVehicles) {
+		this.maximumNumberOfVehicles = maximumNumberOfVehicles;
+	}
+
+	public List<Customer> getAllCustomers() {
         return allCustomers;
     }
 
@@ -90,7 +108,8 @@ public class Solution implements Iterable<Solution> {
         sb.append(("%.2f%n".formatted(routes.stream()
                 .mapToDouble(Route::getTotalRouteDistance)
                 .sum()))
-                .replace(".", ","));
+                //.replace(".", ",")
+                );
 
         return sb.toString();
     }

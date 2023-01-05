@@ -62,7 +62,7 @@ public class GreedyAlgorithm implements IAlgorithm {
             routes.add(route);
         }
 
-        return new Solution(routes, neighbourhoodIterator, allCustomers);
+        return new Solution(routes, neighbourhoodIterator, allCustomers, vehicleInstance.numberOfVehicles());
     }
 
     private boolean customerIsOpen(Customer nextCustomer, Customer lastCustomer, Route route) {

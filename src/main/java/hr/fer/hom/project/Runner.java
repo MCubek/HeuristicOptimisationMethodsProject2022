@@ -52,5 +52,6 @@ public class Runner {
         System.out.println("amountsMatchDemands " + SolutionConstraintFactory.amountsMatchDemands.checkConstraint(testRoute));
         System.out.println("arrivalInterval " + SolutionConstraintFactory.arrivalInterval.checkConstraint(testRoute));
         System.out.println("depotStartAndEnd " + SolutionConstraintFactory.depotStartAndEnd.checkConstraint(testRoute));
+        System.out.println("maximumNumberOfRoutes " + SolutionConstraintFactory.maximumNumberOfRoutes.checkConstraint(testRoute));
     }
 }

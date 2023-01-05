@@ -88,6 +88,13 @@ public class SolutionConstraintFactory {
 
         return true;
     };
+    
+    /**
+     * Constrain 5 - Maximum number of routes
+     */
+    public static final ISolutionConstraint maximumNumberOfRoutes = solution -> {
+        return solution.getMaximumNumberOfVehicles() >= solution.getRoutes().size();
+    };
 
     /**
      * All constrains combined.
@@ -96,6 +103,7 @@ public class SolutionConstraintFactory {
             eachCustomerForOneRoute.checkConstraint(solution) &&
                     amountsMatchDemands.checkConstraint(solution) &&
                     arrivalInterval.checkConstraint(solution) &&
-                    depotStartAndEnd.checkConstraint(solution);
+                    depotStartAndEnd.checkConstraint(solution) &&
+                    maximumNumberOfRoutes.checkConstraint(solution);
 
 }
