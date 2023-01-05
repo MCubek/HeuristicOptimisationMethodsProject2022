@@ -1,8 +1,5 @@
 package hr.fer.hom.project.output;
 
-import java.io.IOException;
-import java.nio.file.Path;
-
 import hr.fer.hom.project.algorithm.GreedyAlgorithm;
 import hr.fer.hom.project.algorithm.IAlgorithm;
 import hr.fer.hom.project.loader.InstanceLoader;
@@ -11,10 +8,14 @@ import hr.fer.hom.project.model.Solution;
 import hr.fer.hom.project.objective.IMinimizingSolutionObjectiveFunction;
 import hr.fer.hom.project.objective.SolutionObjectiveFunction;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
 public class Example {
-	
-	public static void main(String[] args) {
-		if (args.length != 2) throw new IllegalArgumentException("Path of input and output files are required as argument!");
+
+    public static void main(String[] args) {
+        if (args.length != 2)
+            throw new IllegalArgumentException("Path of input and output files are required as argument!");
 
         Path file = Path.of(args[0]);
         Instance instance = null;
@@ -40,8 +41,12 @@ public class Example {
 
         System.out.println(testRoute);
         System.out.println(objectiveFunction.stats(testRoute));
-        
-        Output.outputSolutionToFile(testRoute, args[1]);
-	}
+
+        try {
+            FileUtil.outputSolutionToFile(testRoute, args[1]);
+        } catch (IOException e) {
+            System.err.println("Error while writing to file.");
+        }
+    }
 
 }

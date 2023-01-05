@@ -8,7 +8,6 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author matejc
@@ -23,12 +22,12 @@ public class Solution implements Iterable<Solution> {
     private List<Customer> allCustomers;
 
     public Solution(List<Route> routes, ISolutionNeighbourhoodIterator neighbourhoodIterator, List<Customer> allCustomers) {
-		this.neighbourhoodIterator = neighbourhoodIterator;
-		this.routes = routes;
-		this.allCustomers = allCustomers;
-	}
+        this.neighbourhoodIterator = neighbourhoodIterator;
+        this.routes = routes;
+        this.allCustomers = allCustomers;
+    }
 
-	public Solution(List<Route> routes, ISolutionNeighbourhoodIterator neighbourhoodIterator) {
+    public Solution(List<Route> routes, ISolutionNeighbourhoodIterator neighbourhoodIterator) {
         this.routes = routes;
         this.neighbourhoodIterator = neighbourhoodIterator;
     }
@@ -37,23 +36,23 @@ public class Solution implements Iterable<Solution> {
         this(new ArrayList<>(), neighbourhoodIterator, allCustomers);
     }
 
-	public List<Customer> getAllCustomers() {
-		return allCustomers;
-	}
+    public List<Customer> getAllCustomers() {
+        return allCustomers;
+    }
 
-	public void setAllCustomers(List<Customer> allCustomers) {
-		this.allCustomers = allCustomers;
-	}
+    public void setAllCustomers(List<Customer> allCustomers) {
+        this.allCustomers = allCustomers;
+    }
 
-	public List<Route> getRoutes() {
-		return routes;
-	}
+    public List<Route> getRoutes() {
+        return routes;
+    }
 
-	public int getNumberOfVehicles() {
+    public int getNumberOfVehicles() {
         return getRoutes().size();
     }
 
-	public int getAllRoutesTime() {
+    public int getAllRoutesTime() {
         return getRoutes().stream()
                 .mapToInt(Route::getTotalRouteTime)
                 .sum();
@@ -81,14 +80,18 @@ public class Solution implements Iterable<Solution> {
 
     @Override
     public String toString() {
-    	StringBuilder sb = new StringBuilder();
-    	sb.append("%d%n".formatted(routes.size()));
-    	int i = 1;
-    	
-    	for(Route route : routes) sb.append(i++ + ": " + route + "\n");
-    	
-    	sb.append(("%.2f%n".formatted(routes.stream().mapToDouble(Route::getTotalRouteDistance).sum())).replace(".", ","));
-    	
+        StringBuilder sb = new StringBuilder();
+        sb.append("%d%n".formatted(routes.size()));
+        int i = 1;
+
+        for (Route route : routes)
+            sb.append(i++).append(": ").append(route).append("\n");
+
+        sb.append(("%.2f%n".formatted(routes.stream()
+                .mapToDouble(Route::getTotalRouteDistance)
+                .sum()))
+                .replace(".", ","));
+
         return sb.toString();
     }
 }

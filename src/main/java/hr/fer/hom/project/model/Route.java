@@ -4,7 +4,6 @@ import lombok.Getter;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Bero
@@ -48,11 +47,12 @@ public class Route {
         }
         return time;
     }
-    
+
     public double getTotalRouteDistance() {
-    	double totalDistance = 0;
-    	for(int i = 0; i < customers.size() - 1; i++) totalDistance += customers.get(i).calculateDistance(customers.get(i + 1));    	
-    	return totalDistance;
+        double totalDistance = 0;
+        for (int i = 0; i < customers.size() - 1; i++)
+            totalDistance += customers.get(i).calculateDistance(customers.get(i + 1));
+        return totalDistance;
     }
 
     public int getUsedCargo() {
@@ -76,37 +76,28 @@ public class Route {
     public boolean containsCustomer(Customer customer) {
         return customers.contains(customer);
     }
-    
-    // BRIŠI
-    public List<Customer> getCustomers() {
-		return customers;
-	}
 
-	public int getCapacity() {
-		return capacity;
-	}
-    // BRIŠI
-
-	public Route copy() {
+    public Route copy() {
         return new Route(new LinkedList<>(getCustomers()), getCapacity());
     }
 
     @Override
     public String toString() {
-    	StringBuilder sb = new StringBuilder();
-    	
-    	int time = 0;
+        StringBuilder sb = new StringBuilder();
+
+        int time = 0;
 
         for (int i = 0; i < customers.size(); i++) {
             Customer currentCustomer = customers.get(i);
-        	sb.append(currentCustomer.customerNumber() + "(" + time + ")");
-        	if(i != customers.size() - 1) sb.append("->");
-        	
-            if (time < currentCustomer.readyTime()) time = currentCustomer.readyTime();
+            sb.append(currentCustomer.customerNumber()).append("(").append(time).append(")");
+            if (i != customers.size() - 1) sb.append("->");
+
+            if (time < currentCustomer.readyTime())
+                time = currentCustomer.readyTime();
             time += currentCustomer.serviceTime();
             if (i != customers.size() - 1) time += currentCustomer.calculateDistanceCeil(customers.get(i + 1));
         }
-    	
+
         return sb.toString();
     }
 
