@@ -77,7 +77,7 @@ public class Route {
         return customers.contains(customer);
     }
 
-    public int getRouteLength() {
+    public int getNumberOfStops() {
         return customers.size();
     }
 

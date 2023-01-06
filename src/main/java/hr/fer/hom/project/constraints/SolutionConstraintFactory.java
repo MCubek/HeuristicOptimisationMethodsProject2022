@@ -98,11 +98,15 @@ public class SolutionConstraintFactory {
     /**
      * All constrains combined.
      */
-    public static final ISolutionConstraint allConstrains = solution ->
+    public static final ISolutionConstraint allConstraintsWithoutMaxVehicle = solution ->
             eachCustomerForOneRoute.checkConstraint(solution) &&
                     amountsMatchDemands.checkConstraint(solution) &&
                     arrivalInterval.checkConstraint(solution) &&
-                    depotStartAndEnd.checkConstraint(solution) &&
+                    depotStartAndEnd.checkConstraint(solution);
+
+
+    public static final ISolutionConstraint allConstraints = solution ->
+            allConstraintsWithoutMaxVehicle.checkConstraint(solution) &&
                     maximumNumberOfRoutes.checkConstraint(solution);
 
 }

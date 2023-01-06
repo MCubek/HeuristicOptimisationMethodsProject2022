@@ -60,11 +60,11 @@ public class SolutionNeighbourhoodIterator implements ISolutionNeighbourhoodIter
 
     private void addCustomerToBestPlaceInRoute(Route pickedRoute, Customer customer) {
         int bestIndex = -1;
-        int bestLength = Integer.MAX_VALUE;
-        for (int i = 1; i < pickedRoute.getRouteLength() - 1; i++) {
+        double bestLength = Double.MAX_VALUE;
+        for (int i = 1; i < pickedRoute.getNumberOfStops() - 1; i++) {
             pickedRoute.addCustomerToIndex(customer, i);
 
-            int routeLength = pickedRoute.getRouteLength();
+            double routeLength = pickedRoute.getTotalRouteDistance();
 
             if (routeLength < bestLength) {
                 bestLength = routeLength;
@@ -93,7 +93,7 @@ public class SolutionNeighbourhoodIterator implements ISolutionNeighbourhoodIter
         int removed = 0;
 
         while (removed < numberOfCustomersToRemove) {
-            Customer customer = customers.get(random.nextInt(customers.size()));
+            Customer customer = customers.get(random.nextInt(1, customers.size()));
             if (!customersToRemove.contains(customer)) {
                 customersToRemove.add(customer);
                 removed++;
