@@ -4,6 +4,7 @@ import hr.fer.hom.project.model.Customer;
 import hr.fer.hom.project.model.Route;
 import hr.fer.hom.project.model.Solution;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
@@ -46,22 +47,60 @@ public class SolutionNeighbourhoodIterator implements ISolutionNeighbourhoodIter
 
         List<Route> newRoutes = addCustomersToRoute(routesWithRemovedCustomers, customersToRemove);
 
-        return new Solution(newRoutes, solution.getNeighbourhoodIterator(), solution.getAllCustomers());
+        return new Solution(newRoutes, solution.getAllCustomers(), solution.getMaximumNumberOfVehicles());
     }
 
     private List<Route> addCustomersToRoute(List<Route> routes, List<Customer> customersToAdd) {
-        // TODO Implement
-        return null;
+        for (var customer : customersToAdd) {
+            Route pickedRoute = routes.get(random.nextInt(routes.size()));
+            addCustomerToBestPlaceInRoute(pickedRoute, customer);
+        }
+        return routes;
+    }
+
+    private void addCustomerToBestPlaceInRoute(Route pickedRoute, Customer customer) {
+        int bestIndex = -1;
+        double bestLength = Double.MAX_VALUE;
+        for (int i = 1; i < pickedRoute.getNumberOfStops() - 1; i++) {
+            pickedRoute.addCustomerToIndex(customer, i);
+
+            double routeLength = pickedRoute.getTotalRouteDistance();
+
+            if (routeLength < bestLength) {
+                bestLength = routeLength;
+                bestIndex = i;
+            }
+            pickedRoute.removeCustomerFromIndex(i);
+        }
+        pickedRoute.addCustomerToIndex(customer, bestIndex);
     }
 
     private List<Route> removeCustomersFromRoute(List<Route> routes, List<Customer> customersToRemove) {
-        // TODO Implement
-        return null;
+        List<Route> newRoutes = new ArrayList<>();
+        for (Route route : routes) {
+            route.getCustomers().removeAll(customersToRemove);
+            if (route.getTotalRouteTime() > 0)
+                newRoutes.add(route);
+        }
+
+        return newRoutes;
     }
 
     private List<Customer> pickCustomersToRemove(int numberOfCustomersToRemove) {
-        // TODO Implement
-        return null;
+        List<Customer> customers = solution.getAllCustomers();
+        List<Customer> customersToRemove = new ArrayList<>();
+
+        int removed = 0;
+
+        while (removed < numberOfCustomersToRemove) {
+            Customer customer = customers.get(random.nextInt(1, customers.size()));
+            if (!customersToRemove.contains(customer)) {
+                customersToRemove.add(customer);
+                removed++;
+            }
+        }
+
+        return customersToRemove;
     }
 
     private List<Route> copyRoutes() {

@@ -1,10 +1,9 @@
 package hr.fer.hom.project.model;
 
-import lombok.Getter;
-
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import lombok.Getter;
 
 /**
  * @author Bero
@@ -49,6 +48,13 @@ public class Route {
         return time;
     }
 
+    public double getTotalRouteDistance() {
+        double totalDistance = 0;
+        for (int i = 0; i < customers.size() - 1; i++)
+            totalDistance += customers.get(i).calculateDistance(customers.get(i + 1));
+        return totalDistance;
+    }
+
     public int getUsedCargo() {
         return customers.stream()
                 .mapToInt(Customer::demand)
@@ -67,20 +73,32 @@ public class Route {
         customers.remove(index);
     }
 
-    public boolean containsCustomer(Customer customer) {
-        return customers.contains(customer);
+    public int getNumberOfStops() {
+        return customers.size();
     }
 
     public Route copy() {
         return new Route(new LinkedList<>(getCustomers()), getCapacity());
     }
-
-    @Override
+    
+	@Override
     public String toString() {
-        return getCustomers().stream()
-                .map(Customer::customerNumber)
-                .map(Object::toString)
-                .collect(Collectors.joining("->", "(", ")"));
+        StringBuilder sb = new StringBuilder();
+
+        int time = 0;
+
+        for (int i = 0; i < customers.size(); i++) {
+            Customer currentCustomer = customers.get(i);
+            sb.append(currentCustomer.customerNumber()).append("(").append(time).append(")");
+            if (i != customers.size() - 1) sb.append("->");
+
+            if (time < currentCustomer.readyTime())
+                time = currentCustomer.readyTime();
+            time += currentCustomer.serviceTime();
+            if (i != customers.size() - 1) time += currentCustomer.calculateDistanceCeil(customers.get(i + 1));
+        }
+
+        return sb.toString();
     }
 
 }

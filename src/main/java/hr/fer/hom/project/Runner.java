@@ -2,15 +2,23 @@ package hr.fer.hom.project;
 
 import hr.fer.hom.project.algorithm.GreedyAlgorithm;
 import hr.fer.hom.project.algorithm.IAlgorithm;
+import hr.fer.hom.project.algorithm.LargeNeighbourhoodSearchAlgorithm;
 import hr.fer.hom.project.constraints.SolutionConstraintFactory;
 import hr.fer.hom.project.loader.InstanceLoader;
 import hr.fer.hom.project.model.Instance;
 import hr.fer.hom.project.model.Solution;
+import hr.fer.hom.project.neighbourhood.ISolutionNeighbourhoodIterator;
+import hr.fer.hom.project.neighbourhood.SolutionNeighbourhoodIterator;
+import hr.fer.hom.project.neighbourhood.ValidSolutionNeighbourHoodIterator;
 import hr.fer.hom.project.objective.IMinimizingSolutionObjectiveFunction;
 import hr.fer.hom.project.objective.SolutionObjectiveFunction;
+import hr.fer.hom.project.output.FileUtil;
+import hr.fer.hom.project.timer.Timer;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.util.function.BiFunction;
 
 /**
  * @author matejc
@@ -18,12 +26,26 @@ import java.nio.file.Path;
  */
 
 public class Runner {
+    private static final int MIN_TO_REMOVE = 2;
+    private static final int MAX_TO_REMOVE = 6;
+
+
+    /**
+     * Run and output solution to file.
+     * Takes 3 arguments: Instance file path, output file path and minutes to run algorithm.
+     *
+     * @param args input file path, output file path and minutes to run.
+     */
     public static void main(String[] args) {
-        if (args.length != 1) throw new IllegalArgumentException("Path of file required as argument!");
+        if (args.length != 3)
+            throw new IllegalArgumentException("Path of input file, output file and runtime in minutes required as argument!");
 
         Path file = Path.of(args[0]);
-        Instance instance = null;
+        Path output = Path.of(args[1]);
 
+        Duration timerDuration = Duration.ofMinutes(Long.parseLong(args[2]));
+
+        Instance instance = null;
         try {
             instance = InstanceLoader.loadInstance(file);
 
@@ -38,19 +60,36 @@ public class Runner {
         var vehicleInstance = instance.vehicleInstance();
 
         IMinimizingSolutionObjectiveFunction objectiveFunction = new SolutionObjectiveFunction(3, 1);
-        IAlgorithm greedy = new GreedyAlgorithm(allCustomers, vehicleInstance, null);
 
+        Timer timer = new Timer(timerDuration);
 
-        Solution testRoute = greedy.run(null);
+        IAlgorithm greedy = new GreedyAlgorithm(allCustomers, vehicleInstance);
+        Solution initialSolution = greedy.run(null);
 
-        System.out.println(testRoute);
-        System.out.println(objectiveFunction.stats(testRoute));
-        
-        // Checking all constrains
-        System.out.println("All constrains " + SolutionConstraintFactory.allConstrains.checkConstraint(testRoute));
-        System.out.println("eachCustomerForOneRoutes " + SolutionConstraintFactory.eachCustomerForOneRoute.checkConstraint(testRoute));
-        System.out.println("amountsMatchDemands " + SolutionConstraintFactory.amountsMatchDemands.checkConstraint(testRoute));
-        System.out.println("arrivalInterval " + SolutionConstraintFactory.arrivalInterval.checkConstraint(testRoute));
-        System.out.println("depotStartAndEnd " + SolutionConstraintFactory.depotStartAndEnd.checkConstraint(testRoute));
+        IAlgorithm largeNeighbourhoodSearchAlgorithm = new LargeNeighbourhoodSearchAlgorithm(objectiveFunction,
+                iteratorCreatorFunction,
+                SolutionConstraintFactory.allConstraints,
+                timer
+        );
+
+        Solution solution = largeNeighbourhoodSearchAlgorithm.run(initialSolution);
+
+        System.out.println(solution);
+        System.out.println(objectiveFunction.stats(solution));
+
+        try {
+            FileUtil.outputSolutionToFile(solution, output);
+        } catch (IOException e) {
+            System.err.println("Error while writing to file.");
+            System.err.println(e.getMessage());
+        }
     }
+
+    private static final BiFunction<Solution, Timer, ISolutionNeighbourhoodIterator> iteratorCreatorFunction = (solution, timer) -> {
+        ISolutionNeighbourhoodIterator iteratorNoCheck = new SolutionNeighbourhoodIterator(solution, MIN_TO_REMOVE, MAX_TO_REMOVE);
+
+        return new ValidSolutionNeighbourHoodIterator(iteratorNoCheck,
+                SolutionConstraintFactory.allConstraintsWithoutMaxVehicle,
+                timer);
+    };
 }
