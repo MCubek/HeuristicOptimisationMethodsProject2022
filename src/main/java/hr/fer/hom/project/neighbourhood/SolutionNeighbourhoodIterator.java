@@ -1,13 +1,13 @@
 package hr.fer.hom.project.neighbourhood;
 
+import hr.fer.hom.project.model.Customer;
+import hr.fer.hom.project.model.Route;
+import hr.fer.hom.project.model.Solution;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
-
-import hr.fer.hom.project.model.Customer;
-import hr.fer.hom.project.model.Route;
-import hr.fer.hom.project.model.Solution;
 
 /**
  * @author matejc
@@ -47,8 +47,7 @@ public class SolutionNeighbourhoodIterator implements ISolutionNeighbourhoodIter
 
         List<Route> newRoutes = addCustomersToRoute(routesWithRemovedCustomers, customersToRemove);
 
-        //return new Solution(newRoutes, solution.getNeighbourhoodIterator(), solution.getAllCustomers());
-        return new Solution(newRoutes, this, solution.getAllCustomers());
+        return new Solution(newRoutes, solution.getNeighbourhoodIterator(), solution.getAllCustomers());
     }
 
     private List<Route> addCustomersToRoute(List<Route> routes, List<Customer> customersToAdd) {
@@ -57,35 +56,30 @@ public class SolutionNeighbourhoodIterator implements ISolutionNeighbourhoodIter
     }
 
     private List<Route> removeCustomersFromRoute(List<Route> routes, List<Customer> customersToRemove) {
-    	List<Route> newRoutes = new ArrayList<>();
-    	for(Route route : routes) {
-    		Route newRoute = route.copy();
-    		newRoute.getCustomers().removeAll(customersToRemove);
-    		if(newRoute.getTotalRouteTime() > 0) 
-    			newRoutes.add(newRoute);
-    	}
-    	
+        List<Route> newRoutes = new ArrayList<>();
+        for (Route route : routes) {
+            route.getCustomers().removeAll(customersToRemove);
+            if (route.getTotalRouteTime() > 0)
+                newRoutes.add(route);
+        }
+
         return newRoutes;
     }
 
     private List<Customer> pickCustomersToRemove(int numberOfCustomersToRemove) {
-    	numberOfCustomersToRemove = Math.max(numberOfCustomersToRemove, minCustomersToRemove);
-    	numberOfCustomersToRemove = Math.min(numberOfCustomersToRemove, maxCustomersToRemove);
-    	
-    	List<Customer> customers = solution.getAllCustomers();
+        List<Customer> customers = solution.getAllCustomers();
         List<Customer> customersToRemove = new ArrayList<>();
-        
-        int numberOfCustomers = solution.getAllCustomers().size();
+
         int removed = 0;
-        
-        while(removed < numberOfCustomersToRemove) {
-        	Customer customer = customers.get((int) ((Math.random() * (numberOfCustomers - 1)) + 1));
-        	if(!customersToRemove.contains(customer)) {
-        		customersToRemove.add(customer);
-        		removed ++;
-        	}
+
+        while (removed < numberOfCustomersToRemove) {
+            Customer customer = customers.get(random.nextInt(customers.size()));
+            if (!customersToRemove.contains(customer)) {
+                customersToRemove.add(customer);
+                removed++;
+            }
         }
-        
+
         return customersToRemove;
     }
 

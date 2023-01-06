@@ -2,12 +2,12 @@ package hr.fer.hom.project;
 
 import hr.fer.hom.project.algorithm.GreedyAlgorithm;
 import hr.fer.hom.project.algorithm.IAlgorithm;
-import hr.fer.hom.project.constraints.SolutionConstraintFactory;
 import hr.fer.hom.project.loader.InstanceLoader;
 import hr.fer.hom.project.model.Instance;
 import hr.fer.hom.project.model.Solution;
 import hr.fer.hom.project.objective.IMinimizingSolutionObjectiveFunction;
 import hr.fer.hom.project.objective.SolutionObjectiveFunction;
+import hr.fer.hom.project.output.FileUtil;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -19,7 +19,7 @@ import java.nio.file.Path;
 
 public class Runner {
     public static void main(String[] args) {
-        if (args.length != 1) throw new IllegalArgumentException("Path of file required as argument!");
+        if (args.length != 2) throw new IllegalArgumentException("Path of input file and output file required as argument!");
 
         Path file = Path.of(args[0]);
         Instance instance = null;
@@ -45,13 +45,12 @@ public class Runner {
 
         System.out.println(testRoute);
         System.out.println(objectiveFunction.stats(testRoute));
-        
-        // Checking all constrains
-        System.out.println("All constrains " + SolutionConstraintFactory.allConstrains.checkConstraint(testRoute));
-        System.out.println("eachCustomerForOneRoutes " + SolutionConstraintFactory.eachCustomerForOneRoute.checkConstraint(testRoute));
-        System.out.println("amountsMatchDemands " + SolutionConstraintFactory.amountsMatchDemands.checkConstraint(testRoute));
-        System.out.println("arrivalInterval " + SolutionConstraintFactory.arrivalInterval.checkConstraint(testRoute));
-        System.out.println("depotStartAndEnd " + SolutionConstraintFactory.depotStartAndEnd.checkConstraint(testRoute));
-        System.out.println("maximumNumberOfRoutes " + SolutionConstraintFactory.maximumNumberOfRoutes.checkConstraint(testRoute));
+
+        try {
+            FileUtil.outputSolutionToFile(testRoute, args[1]);
+        } catch (IOException e) {
+            System.err.println("Error while writing to file.");
+            System.err.println(e.getMessage());
+        }
     }
 }

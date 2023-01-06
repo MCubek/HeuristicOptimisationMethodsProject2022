@@ -88,13 +88,12 @@ public class SolutionConstraintFactory {
 
         return true;
     };
-    
+
     /**
      * Constrain 5 - Maximum number of routes
      */
-    public static final ISolutionConstraint maximumNumberOfRoutes = solution -> {
-        return solution.getMaximumNumberOfVehicles() >= solution.getRoutes().size();
-    };
+    public static final ISolutionConstraint maximumNumberOfRoutes = solution ->
+            solution.getMaximumNumberOfVehicles() >= solution.getRoutes().size();
 
     /**
      * All constrains combined.

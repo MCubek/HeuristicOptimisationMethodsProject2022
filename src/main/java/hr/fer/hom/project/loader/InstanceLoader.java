@@ -19,6 +19,7 @@ public class InstanceLoader {
     private InstanceLoader() {
     }
 
+    @SuppressWarnings("UnusedAssignment")
     public static Instance loadInstance(Path file) throws IOException {
         try (var reader = Files.newBufferedReader(file)) {
             List<Customer> customerList = new ArrayList<>();

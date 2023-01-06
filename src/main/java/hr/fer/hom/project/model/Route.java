@@ -81,15 +81,6 @@ public class Route {
         return new Route(new LinkedList<>(getCustomers()), getCapacity());
     }
     
-
-    public List<Customer> getCustomers() {
-		return customers;
-	}
-
-	public int getCapacity() {
-		return capacity;
-	}
-
 	@Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
