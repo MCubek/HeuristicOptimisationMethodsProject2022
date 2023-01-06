@@ -28,17 +28,6 @@ public class Solution {
                 .sum();
     }
 
-    public Route getRoute(int index) {
-        return routes.get(index);
-    }
-
-    public boolean containsCustomer(Customer customer) {
-        for (var route : routes) {
-            if (route.containsCustomer(customer)) return true;
-        }
-        return false;
-    }
-
     public boolean satisfiesConstraint(ISolutionConstraint constraint) {
         return constraint.checkConstraint(this);
     }

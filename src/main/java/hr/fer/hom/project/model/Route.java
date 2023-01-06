@@ -73,10 +73,6 @@ public class Route {
         customers.remove(index);
     }
 
-    public boolean containsCustomer(Customer customer) {
-        return customers.contains(customer);
-    }
-
     public int getNumberOfStops() {
         return customers.size();
     }
