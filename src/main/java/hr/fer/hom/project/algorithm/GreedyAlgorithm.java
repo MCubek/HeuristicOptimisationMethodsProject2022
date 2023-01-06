@@ -4,7 +4,6 @@ import hr.fer.hom.project.model.Customer;
 import hr.fer.hom.project.model.Route;
 import hr.fer.hom.project.model.Solution;
 import hr.fer.hom.project.model.VehicleInstance;
-import hr.fer.hom.project.neighbourhood.ISolutionNeighbourhoodIterator;
 
 import java.util.*;
 
@@ -15,16 +14,13 @@ import java.util.*;
 
 public class GreedyAlgorithm implements IAlgorithm {
     private final List<Customer> allCustomers;
-    private final ISolutionNeighbourhoodIterator neighbourhoodIterator;
     private final VehicleInstance vehicleInstance;
 
 
     public GreedyAlgorithm(List<Customer> allCustomers,
-                           VehicleInstance vehicleInstance,
-                           ISolutionNeighbourhoodIterator neighbourhoodIterator) {
+                           VehicleInstance vehicleInstance) {
         this.allCustomers = allCustomers;
         this.vehicleInstance = vehicleInstance;
-        this.neighbourhoodIterator = neighbourhoodIterator;
     }
 
 
@@ -62,7 +58,7 @@ public class GreedyAlgorithm implements IAlgorithm {
             routes.add(route);
         }
 
-        return new Solution(routes, neighbourhoodIterator, allCustomers, vehicleInstance.numberOfVehicles());
+        return new Solution(routes, allCustomers, vehicleInstance.numberOfVehicles());
     }
 
     private boolean customerIsOpen(Customer nextCustomer, Customer lastCustomer, Route route) {

@@ -1,12 +1,9 @@
 package hr.fer.hom.project.model;
 
 import hr.fer.hom.project.constraints.ISolutionConstraint;
-import hr.fer.hom.project.neighbourhood.ISolutionNeighbourhoodIterator;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -15,37 +12,11 @@ import java.util.List;
  */
 
 @Getter
-@Setter
-public class Solution implements Iterable<Solution> {
-    private final ISolutionNeighbourhoodIterator neighbourhoodIterator;
-    private List<Route> routes;
-    private List<Customer> allCustomers;
-    private int maximumNumberOfVehicles;
-
-    public Solution(List<Route> routes, ISolutionNeighbourhoodIterator neighbourhoodIterator,
-                    List<Customer> allCustomers, int maximumNumberOfVehicles) {
-        super();
-        this.neighbourhoodIterator = neighbourhoodIterator;
-        this.routes = routes;
-        this.allCustomers = allCustomers;
-        this.maximumNumberOfVehicles = maximumNumberOfVehicles;
-    }
-
-    public Solution(List<Route> routes, ISolutionNeighbourhoodIterator neighbourhoodIterator, List<Customer> allCustomers) {
-        this.neighbourhoodIterator = neighbourhoodIterator;
-        this.routes = routes;
-        this.allCustomers = allCustomers;
-    }
-
-    public Solution(List<Route> routes, ISolutionNeighbourhoodIterator neighbourhoodIterator) {
-        this.routes = routes;
-        this.neighbourhoodIterator = neighbourhoodIterator;
-    }
-
-    public Solution(ISolutionNeighbourhoodIterator neighbourhoodIterator, List<Customer> allCustomers) {
-        this(new ArrayList<>(), neighbourhoodIterator, allCustomers);
-    }
-
+@RequiredArgsConstructor
+public class Solution {
+    private final List<Route> routes;
+    private final List<Customer> allCustomers;
+    private final int maximumNumberOfVehicles;
 
     public int getNumberOfVehicles() {
         return getRoutes().size();
@@ -73,11 +44,6 @@ public class Solution implements Iterable<Solution> {
     }
 
     @Override
-    public Iterator<Solution> iterator() {
-        return neighbourhoodIterator;
-    }
-
-    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("%d%n".formatted(routes.size()));
@@ -93,4 +59,5 @@ public class Solution implements Iterable<Solution> {
 
         return sb.toString();
     }
+
 }

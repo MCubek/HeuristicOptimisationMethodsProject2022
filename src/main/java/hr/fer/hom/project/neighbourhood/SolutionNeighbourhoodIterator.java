@@ -47,7 +47,7 @@ public class SolutionNeighbourhoodIterator implements ISolutionNeighbourhoodIter
 
         List<Route> newRoutes = addCustomersToRoute(routesWithRemovedCustomers, customersToRemove);
 
-        return new Solution(newRoutes, solution.getNeighbourhoodIterator(), solution.getAllCustomers());
+        return new Solution(newRoutes, solution.getAllCustomers(), solution.getMaximumNumberOfVehicles());
     }
 
     private List<Route> addCustomersToRoute(List<Route> routes, List<Customer> customersToAdd) {

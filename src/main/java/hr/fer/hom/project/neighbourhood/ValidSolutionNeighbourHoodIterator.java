@@ -16,10 +16,14 @@ public class ValidSolutionNeighbourHoodIterator implements ISolutionNeighbourhoo
 
     private final ISolutionNeighbourhoodIterator sometimesValidSolutionNeighbourhoodIterator;
     private final ISolutionConstraint solutionConstraint;
+    private final int maxIterations;
+
+    private int iteration = 0;
 
     @Override
     public boolean hasNext() {
-        return sometimesValidSolutionNeighbourhoodIterator.hasNext();
+        return sometimesValidSolutionNeighbourhoodIterator.hasNext()
+                && iteration <= maxIterations;
     }
 
     @Override
@@ -29,6 +33,7 @@ public class ValidSolutionNeighbourHoodIterator implements ISolutionNeighbourhoo
         Solution nextValidSolution;
         do {
             nextValidSolution = sometimesValidSolutionNeighbourhoodIterator.next();
+            iteration += 1;
         } while (!nextValidSolution.satisfiesConstraint(solutionConstraint));
         return nextValidSolution;
     }
