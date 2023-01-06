@@ -89,11 +89,12 @@ public class Route {
 
         for (int i = 0; i < customers.size(); i++) {
             Customer currentCustomer = customers.get(i);
-            sb.append(currentCustomer.customerNumber()).append("(").append(time).append(")");
-            if (i != customers.size() - 1) sb.append("->");
 
             if (time < currentCustomer.readyTime())
                 time = currentCustomer.readyTime();
+            sb.append(currentCustomer.customerNumber()).append("(").append(time).append(")");
+
+            if (i != customers.size() - 1) sb.append("->");
             time += currentCustomer.serviceTime();
             if (i != customers.size() - 1) time += currentCustomer.calculateDistanceCeil(customers.get(i + 1));
         }
