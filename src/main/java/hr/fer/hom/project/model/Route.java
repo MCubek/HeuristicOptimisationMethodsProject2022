@@ -77,6 +77,10 @@ public class Route {
         return customers.contains(customer);
     }
 
+    public int getRouteLength() {
+        return customers.size();
+    }
+
     public Route copy() {
         return new Route(new LinkedList<>(getCustomers()), getCapacity());
     }
