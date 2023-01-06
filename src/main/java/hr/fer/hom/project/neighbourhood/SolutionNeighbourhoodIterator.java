@@ -1,12 +1,13 @@
 package hr.fer.hom.project.neighbourhood;
 
-import hr.fer.hom.project.model.Customer;
-import hr.fer.hom.project.model.Route;
-import hr.fer.hom.project.model.Solution;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
+
+import hr.fer.hom.project.model.Customer;
+import hr.fer.hom.project.model.Route;
+import hr.fer.hom.project.model.Solution;
 
 /**
  * @author matejc
@@ -46,7 +47,8 @@ public class SolutionNeighbourhoodIterator implements ISolutionNeighbourhoodIter
 
         List<Route> newRoutes = addCustomersToRoute(routesWithRemovedCustomers, customersToRemove);
 
-        return new Solution(newRoutes, solution.getNeighbourhoodIterator(), solution.getAllCustomers());
+        //return new Solution(newRoutes, solution.getNeighbourhoodIterator(), solution.getAllCustomers());
+        return new Solution(newRoutes, this, solution.getAllCustomers());
     }
 
     private List<Route> addCustomersToRoute(List<Route> routes, List<Customer> customersToAdd) {
@@ -55,13 +57,32 @@ public class SolutionNeighbourhoodIterator implements ISolutionNeighbourhoodIter
     }
 
     private List<Route> removeCustomersFromRoute(List<Route> routes, List<Customer> customersToRemove) {
-        // TODO Implement
-        return null;
+    	List<Route> newRoutes = new ArrayList<>();
+    	for(Route route : routes) {
+    		route.getCustomers().removeAll(customersToRemove);
+    		if(route.getCustomers().stream().filter(t -> t.customerNumber() > 0).count() > 0) 
+    			newRoutes.add(route);
+    	}
+    	
+        return newRoutes;
     }
 
     private List<Customer> pickCustomersToRemove(int numberOfCustomersToRemove) {
-        // TODO Implement
-        return null;
+    	List<Customer> customers = solution.getAllCustomers();
+        List<Customer> customersToRemove = new ArrayList<>();
+        
+        int numberOfCustomers = solution.getAllCustomers().size();
+        int removed = 0;
+        
+        while(removed < numberOfCustomersToRemove) {
+        	Customer customer = customers.get((int) ((Math.random() * (numberOfCustomers - 1)) + 1));
+        	if(!customersToRemove.contains(customer)) {
+        		customersToRemove.add(customer);
+        		removed ++;
+        	}
+        }
+        
+        return customersToRemove;
     }
 
     private List<Route> copyRoutes() {
