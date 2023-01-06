@@ -10,8 +10,8 @@ public class FileUtil {
     private FileUtil() {
     }
 
-    public static void outputSolutionToFile(Solution solution, String fileName) throws IOException {
-        try (var writer = Files.newBufferedWriter(Path.of(fileName))) {
+    public static void outputSolutionToFile(Solution solution, Path file) throws IOException {
+        try (var writer = Files.newBufferedWriter(file)) {
             String output = solution.toString();
             writer.write(output);
         }

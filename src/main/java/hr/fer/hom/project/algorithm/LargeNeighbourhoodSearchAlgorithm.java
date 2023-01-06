@@ -4,9 +4,10 @@ import hr.fer.hom.project.constraints.ISolutionConstraint;
 import hr.fer.hom.project.model.Solution;
 import hr.fer.hom.project.neighbourhood.ISolutionNeighbourhoodIterator;
 import hr.fer.hom.project.objective.IMinimizingSolutionObjectiveFunction;
+import hr.fer.hom.project.timer.Timer;
 import lombok.RequiredArgsConstructor;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 /**
  * @author matejc
@@ -17,9 +18,9 @@ import java.util.function.Function;
 public class LargeNeighbourhoodSearchAlgorithm implements IAlgorithm {
 
     private final IMinimizingSolutionObjectiveFunction objectiveFunction;
-    private final Function<Solution, ISolutionNeighbourhoodIterator> neighbourhoodIteratorCreator;
+    private final BiFunction<Solution, Timer, ISolutionNeighbourhoodIterator> neighbourhoodIteratorCreator;
     private final ISolutionConstraint constraint;
-    private final int iterations;
+    private final Timer timer;
 
     @Override
     public Solution run(Solution initalSolution) {
@@ -27,8 +28,9 @@ public class LargeNeighbourhoodSearchAlgorithm implements IAlgorithm {
         Solution incumbent = initalSolution;
         double incumbentScore = objectiveFunction.score(incumbent);
 
-        for (int i = 0; i < iterations; i++) {
-            ISolutionNeighbourhoodIterator neighbourhoodIterator = neighbourhoodIteratorCreator.apply(incumbent);
+        int i = 0;
+        while (timer.isActive()) {
+            ISolutionNeighbourhoodIterator neighbourhoodIterator = neighbourhoodIteratorCreator.apply(incumbent, timer);
 
             while (neighbourhoodIterator.hasNext()) {
                 Solution neighbour = neighbourhoodIterator.next();
@@ -40,14 +42,9 @@ public class LargeNeighbourhoodSearchAlgorithm implements IAlgorithm {
                     break;
                 }
             }
-            // Reached max iterations on iterator
-            if (!neighbourhoodIterator.hasNext()) {
-                System.out.printf("Iteration %d, Reached maximum iterator iterations.%n", i);
-            }
 
-            if (i % 10 == 0) {
-                System.out.format("Iteration %d, %s%n", i, objectiveFunction.stats(incumbent));
-            }
+            System.out.format("Iteration %d, %s%n", i, objectiveFunction.stats(incumbent));
+            i++;
         }
 
         if (!constraint.checkConstraint(incumbent)) {

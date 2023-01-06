@@ -2,6 +2,7 @@ package hr.fer.hom.project.neighbourhood;
 
 import hr.fer.hom.project.constraints.ISolutionConstraint;
 import hr.fer.hom.project.model.Solution;
+import hr.fer.hom.project.timer.Timer;
 import lombok.RequiredArgsConstructor;
 
 import java.util.NoSuchElementException;
@@ -16,14 +17,13 @@ public class ValidSolutionNeighbourHoodIterator implements ISolutionNeighbourhoo
 
     private final ISolutionNeighbourhoodIterator sometimesValidSolutionNeighbourhoodIterator;
     private final ISolutionConstraint solutionConstraint;
-    private final int maxIterations;
+    private final Timer timer;
 
-    private int iteration = 0;
 
     @Override
     public boolean hasNext() {
         return sometimesValidSolutionNeighbourhoodIterator.hasNext()
-                && iteration <= maxIterations;
+                && timer.isActive();
     }
 
     @Override
@@ -33,7 +33,6 @@ public class ValidSolutionNeighbourHoodIterator implements ISolutionNeighbourhoo
         Solution nextValidSolution;
         do {
             nextValidSolution = sometimesValidSolutionNeighbourhoodIterator.next();
-            iteration += 1;
         } while (!nextValidSolution.satisfiesConstraint(solutionConstraint));
         return nextValidSolution;
     }

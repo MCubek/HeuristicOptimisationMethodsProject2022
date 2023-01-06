@@ -13,10 +13,12 @@ import hr.fer.hom.project.neighbourhood.ValidSolutionNeighbourHoodIterator;
 import hr.fer.hom.project.objective.IMinimizingSolutionObjectiveFunction;
 import hr.fer.hom.project.objective.SolutionObjectiveFunction;
 import hr.fer.hom.project.output.FileUtil;
+import hr.fer.hom.project.timer.Timer;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.function.Function;
+import java.time.Duration;
+import java.util.function.BiFunction;
 
 /**
  * @author matejc
@@ -24,20 +26,26 @@ import java.util.function.Function;
  */
 
 public class Runner {
-
-    private static final int ITERATIONS = 500;
-    private static final int ITERATOR_ITERATIONS = 100_000;
     private static final int MIN_TO_REMOVE = 2;
     private static final int MAX_TO_REMOVE = 6;
 
 
+    /**
+     * Run and output solution to file.
+     * Takes 3 arguments: Instance file path, output file path and minutes to run algorithm.
+     *
+     * @param args input file path, output file path and minutes to run.
+     */
     public static void main(String[] args) {
-        if (args.length != 2)
-            throw new IllegalArgumentException("Path of input file and output file required as argument!");
+        if (args.length != 3)
+            throw new IllegalArgumentException("Path of input file, output file and runtime in minutes required as argument!");
 
         Path file = Path.of(args[0]);
-        Instance instance = null;
+        Path output = Path.of(args[1]);
 
+        Duration timerDuration = Duration.ofMinutes(Long.parseLong(args[2]));
+
+        Instance instance = null;
         try {
             instance = InstanceLoader.loadInstance(file);
 
@@ -52,15 +60,17 @@ public class Runner {
         var vehicleInstance = instance.vehicleInstance();
 
         IMinimizingSolutionObjectiveFunction objectiveFunction = new SolutionObjectiveFunction(3, 1);
+
+        Timer timer = new Timer(timerDuration);
+
         IAlgorithm greedy = new GreedyAlgorithm(allCustomers, vehicleInstance);
-
-
         Solution initialSolution = greedy.run(null);
 
         IAlgorithm largeNeighbourhoodSearchAlgorithm = new LargeNeighbourhoodSearchAlgorithm(objectiveFunction,
                 iteratorCreatorFunction,
                 SolutionConstraintFactory.allConstraints,
-                ITERATIONS);
+                timer
+        );
 
         Solution solution = largeNeighbourhoodSearchAlgorithm.run(initialSolution);
 
@@ -68,18 +78,18 @@ public class Runner {
         System.out.println(objectiveFunction.stats(solution));
 
         try {
-            FileUtil.outputSolutionToFile(solution, args[1]);
+            FileUtil.outputSolutionToFile(solution, output);
         } catch (IOException e) {
             System.err.println("Error while writing to file.");
             System.err.println(e.getMessage());
         }
     }
 
-    private static final Function<Solution, ISolutionNeighbourhoodIterator> iteratorCreatorFunction = solution -> {
+    private static final BiFunction<Solution, Timer, ISolutionNeighbourhoodIterator> iteratorCreatorFunction = (solution, timer) -> {
         ISolutionNeighbourhoodIterator iteratorNoCheck = new SolutionNeighbourhoodIterator(solution, MIN_TO_REMOVE, MAX_TO_REMOVE);
 
         return new ValidSolutionNeighbourHoodIterator(iteratorNoCheck,
                 SolutionConstraintFactory.allConstraintsWithoutMaxVehicle,
-                ITERATOR_ITERATIONS);
+                timer);
     };
 }
