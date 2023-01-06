@@ -13,7 +13,7 @@ public class FileUtil {
     public static void outputSolutionToFile(Solution solution, String fileName) throws IOException {
         try (var writer = Files.newBufferedWriter(Path.of(fileName))) {
             String output = solution.toString();
-            writer.write(output.substring(0, output.length() - 2));
+            writer.write(output);
         }
     }
 

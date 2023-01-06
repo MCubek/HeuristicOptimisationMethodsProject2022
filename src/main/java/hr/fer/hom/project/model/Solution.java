@@ -86,7 +86,7 @@ public class Solution implements Iterable<Solution> {
         for (Route route : routes)
             sb.append(i++).append(": ").append(route).append("\n");
 
-        sb.append(("%.2f%n".formatted(routes.stream()
+        sb.append(("%f%n".formatted(routes.stream()
                 .mapToDouble(Route::getTotalRouteDistance)
                 .sum()))
         );
