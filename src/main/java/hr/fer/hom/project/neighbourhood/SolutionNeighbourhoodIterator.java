@@ -59,15 +59,19 @@ public class SolutionNeighbourhoodIterator implements ISolutionNeighbourhoodIter
     private List<Route> removeCustomersFromRoute(List<Route> routes, List<Customer> customersToRemove) {
     	List<Route> newRoutes = new ArrayList<>();
     	for(Route route : routes) {
-    		route.getCustomers().removeAll(customersToRemove);
-    		if(route.getCustomers().stream().filter(t -> t.customerNumber() > 0).count() > 0) 
-    			newRoutes.add(route);
+    		Route newRoute = route.copy();
+    		newRoute.getCustomers().removeAll(customersToRemove);
+    		if(newRoute.getTotalRouteTime() > 0) 
+    			newRoutes.add(newRoute);
     	}
     	
         return newRoutes;
     }
 
     private List<Customer> pickCustomersToRemove(int numberOfCustomersToRemove) {
+    	numberOfCustomersToRemove = Math.max(numberOfCustomersToRemove, minCustomersToRemove);
+    	numberOfCustomersToRemove = Math.min(numberOfCustomersToRemove, maxCustomersToRemove);
+    	
     	List<Customer> customers = solution.getAllCustomers();
         List<Customer> customersToRemove = new ArrayList<>();
         
