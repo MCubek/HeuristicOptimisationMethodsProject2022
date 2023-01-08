@@ -53,26 +53,15 @@ public class SolutionNeighbourhoodIterator implements ISolutionNeighbourhoodIter
     private List<Route> addCustomersToRoute(List<Route> routes, List<Customer> customersToAdd) {
         for (var customer : customersToAdd) {
             Route pickedRoute = routes.get(random.nextInt(routes.size()));
-            addCustomerToBestPlaceInRoute(pickedRoute, customer);
+
+            addCustomerToRandomPlaceInRoute(pickedRoute, customer);
         }
         return routes;
     }
 
-    private void addCustomerToBestPlaceInRoute(Route pickedRoute, Customer customer) {
-        int bestIndex = -1;
-        double bestLength = Double.MAX_VALUE;
-        for (int i = 1; i < pickedRoute.getNumberOfStops() - 1; i++) {
-            pickedRoute.addCustomerToIndex(customer, i);
-
-            double routeLength = pickedRoute.getTotalRouteDistance();
-
-            if (routeLength < bestLength) {
-                bestLength = routeLength;
-                bestIndex = i;
-            }
-            pickedRoute.removeCustomerFromIndex(i);
-        }
-        pickedRoute.addCustomerToIndex(customer, bestIndex);
+    private void addCustomerToRandomPlaceInRoute(Route pickedRoute, Customer customer) {
+        int indexWhereToInsert = random.nextInt(1, pickedRoute.getNumberOfStops() - 1);
+        pickedRoute.addCustomerToIndex(customer, indexWhereToInsert);
     }
 
     private List<Route> removeCustomersFromRoute(List<Route> routes, List<Customer> customersToRemove) {

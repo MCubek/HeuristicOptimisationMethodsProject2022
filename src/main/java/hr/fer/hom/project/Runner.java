@@ -26,7 +26,7 @@ import java.util.function.BiFunction;
  */
 
 public class Runner {
-    private static final int MIN_TO_REMOVE = 2;
+    private static final int MIN_TO_REMOVE = 1;
     private static final int MAX_TO_REMOVE = 6;
 
 
@@ -59,7 +59,7 @@ public class Runner {
         var allCustomers = instance.customers();
         var vehicleInstance = instance.vehicleInstance();
 
-        IMinimizingSolutionObjectiveFunction objectiveFunction = new SolutionObjectiveFunction(3, 1);
+        IMinimizingSolutionObjectiveFunction objectiveFunction = new SolutionObjectiveFunction(6, 1);
 
         Timer timer = new Timer(timerDuration);
 
