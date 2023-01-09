@@ -76,6 +76,7 @@ public class Runner {
 
         System.out.println(solution);
         System.out.println(objectiveFunction.stats(solution));
+        System.out.printf("Calls to objective function: %d%n", objectiveFunction.numCalls());
 
         try {
             FileUtil.outputSolutionToFile(solution, output);
