@@ -11,4 +11,6 @@ public interface IMinimizingSolutionObjectiveFunction {
     double score(Solution solution);
 
     String stats(Solution solution);
+
+    long numCalls();
 }
